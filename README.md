@@ -804,7 +804,6 @@ For any questions about the implementation, design decisions, or how to run the 
 
 - This README for complete documentation
 - `prompts.py` for the system prompt (the heart of the project)
-- Demo videos for visual walkthrough
 - Code comments for specific implementation details
 
 **Remember:** The focus is on **prompt engineering**, not complex code. The prompts drive the intelligence, the code just orchestrates it.

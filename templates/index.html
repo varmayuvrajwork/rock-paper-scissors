@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock-Paper-Scissors Plus - AI Judge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .game-section {
+            margin: 30px 0;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .input-section {
+            margin: 20px 0;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .quick-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quick-btn {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .round-result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .result-header {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .moves-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .move-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .move-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .move-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .explanation {
+            text-align: center;
+            font-size: 1.1em;
+            color: #333;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .winner-banner {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .winner-user {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .winner-bot {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .winner-draw {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .reasoning {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.5em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .rules-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .history {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Rock-Paper-Scissors Plus</h1>
+        <p class="subtitle">AI-Powered Judge using Google Gemini</p>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" class="hidden"></div>
+
+        <!-- Start Game Section -->
+        <div id="startSection" class="game-section">
+            <div class="input-group">
+                <input type="text" id="sessionId" placeholder="Enter Session ID (e.g., player123)" value="player123">
+                <input type="number" id="maxRounds" placeholder="Max Rounds" value="5" min="1" max="20" style="max-width: 150px;">
+                <button class="btn-success" onclick="startGame()">Start Game</button>
+            </div>
+            
+            <div class="rules-section">
+                <h3>📖 Game Rules:</h3>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Valid Moves:</strong> rock, paper, scissors, bomb</li>
+                    <li><strong>Standard Rules:</strong> Rock beats scissors, scissors beats paper, paper beats rock</li>
+                    <li><strong>Bomb:</strong> Beats everything but can only be used ONCE per game</li>
+                    <li><strong>Bomb vs Bomb:</strong> Results in a draw</li>
+                    <li><strong>Invalid/Unclear Moves:</strong> Waste your turn</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>💡 Tip:</strong> You can use natural language! Try "I choose rock", "let's go with scissors", or even typos like "rok"</p>
+            </div>
+        </div>
+
+        <!-- Game Play Section -->
+        <div id="gameSection" class="game-section hidden">
+            <!-- Score Board -->
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">Round</div>
+                    <div class="score-value" id="roundNumber">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">You</div>
+                    <div class="score-value" id="userScore">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Bot</div>
+                    <div class="score-value" id="botScore">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Bomb Used</div>
+                    <div class="score-value" id="bombStatus">❌</div>
+                </div>
+            </div>
+
+            <!-- Quick Move Buttons -->
+            <div class="quick-buttons">
+                <button class="quick-btn" onclick="playMove('rock')">🪨 Rock</button>
+                <button class="quick-btn" onclick="playMove('paper')">📄 Paper</button>
+                <button class="quick-btn" onclick="playMove('scissors')">✂️ Scissors</button>
+                <button class="quick-btn" id="bombBtn" onclick="playMove('bomb')">💣 Bomb</button>
+            </div>
+
+            <!-- Natural Language Input -->
+            <div class="input-group">
+                <input type="text" id="moveInput" placeholder="Or type your move in natural language..." onkeypress="handleKeyPress(event)">
+                <button class="btn-primary" onclick="playCustomMove()">Play Move</button>
+            </div>
+
+            <!-- Round Result -->
+            <div id="roundResult" class="hidden"></div>
+
+            <!-- Game Controls -->
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn-secondary" onclick="endGame()">End Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let currentSessionId = null;
+
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status status-${type}`;
+            statusEl.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusEl.classList.add('hidden');
+            }, 5000);
+        }
+
+        async function startGame() {
+            const sessionId = document.getElementById('sessionId').value.trim();
+            const maxRounds = parseInt(document.getElementById('maxRounds').value);
+
+            if (!sessionId) {
+                showStatus('Please enter a session ID', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/game/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId, max_rounds: maxRounds })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail);
+                }
+
+                const data = await response.json();
+                currentSessionId = sessionId;
+
+                // Switch to game section
+                document.getElementById('startSection').classList.add('hidden');
+                document.getElementById('gameSection').classList.remove('hidden');
+
+                // Update score board
+                updateScoreBoard(data.game_state);
+
+                showStatus('Game started! Make your first move.', 'success');
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function playMove(move) {
+            if (!currentSessionId) return;
+
+            try {
+                const response = await fetch(`${API_URL}/game/play`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        session_id: currentSessionId, 
+                        user_input: move 
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail);
+                }
+
+                const data = await response.json();
+                displayRoundResult(data);
+
+                // Update score board
+                updateScoreBoard({
+                    round_number: data.result.round_number,
+                    user_score: data.result.user_score,
+                    bot_score: data.result.bot_score,
+                    user_bomb_used: data.interpretation.interpreted_move === 'bomb'
+                });
+
+                // Clear input
+                document.getElementById('moveInput').value = '';
+
+                // Check game over
+                if (data.game_over) {
+                    displayGameOver(data);
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function playCustomMove() {
+            const move = document.getElementById('moveInput').value.trim();
+            if (move) {
+                await playMove(move);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                playCustomMove();
+            }
+        }
+
+        function updateScoreBoard(state) {
+            document.getElementById('roundNumber').textContent = state.round_number;
+            document.getElementById('userScore').textContent = state.user_score;
+            document.getElementById('botScore').textContent = state.bot_score;
+            
+            const bombStatus = state.user_bomb_used ? '✅' : '❌';
+            document.getElementById('bombStatus').textContent = bombStatus;
+            
+            // Disable bomb button if used
+            const bombBtn = document.getElementById('bombBtn');
+            if (state.user_bomb_used) {
+                bombBtn.disabled = true;
+                bombBtn.style.opacity = '0.5';
+                bombBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function displayRoundResult(data) {
+            const resultDiv = document.getElementById('roundResult');
+            const interpretation = data.interpretation;
+            const result = data.result;
+
+            let html = `
+                <div class="round-result">
+                    <div class="result-header">Round ${result.round_number}</div>
+                    
+                    <div class="moves-display">
+                        <div class="move-item">
+                            <div class="move-label">You Played</div>
+                            <div class="move-value">${result.user_move ? result.user_move.toUpperCase() : 'INVALID'}</div>
+                        </div>
+                        <div class="move-item">
+                            <div class="move-label">Bot Played</div>
+                            <div class="move-value">${result.bot_move.toUpperCase()}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="explanation">${result.explanation}</div>
+            `;
+
+            // Winner banner
+            if (result.winner === 'user') {
+                html += '<div class="winner-banner winner-user">🎉 You Win This Round!</div>';
+            } else if (result.winner === 'bot') {
+                html += '<div class="winner-banner winner-bot">🤖 Bot Wins This Round!</div>';
+            } else if (result.winner === 'draw') {
+                html += '<div class="winner-banner winner-draw">🤝 Draw!</div>';
+            } else {
+                html += '<div class="winner-banner winner-bot">❌ Turn Wasted!</div>';
+            }
+
+            // Reasoning
+            if (interpretation.reasoning) {
+                html += `<div class="reasoning">💭 ${interpretation.reasoning}</div>`;
+            }
+
+            html += '</div>';
+
+            resultDiv.innerHTML = html;
+            resultDiv.classList.remove('hidden');
+        }
+
+        function displayGameOver(data) {
+            const resultDiv = document.getElementById('roundResult');
+            
+            let winnerText = '';
+            if (data.final_winner === 'user') {
+                winnerText = '🏆 CONGRATULATIONS! YOU WIN! 🏆';
+            } else if (data.final_winner === 'bot') {
+                winnerText = '🤖 Bot Wins! Better Luck Next Time!';
+            } else {
+                winnerText = '🤝 It\'s a DRAW! Well Played!';
+            }
+
+            resultDiv.innerHTML += `
+                <div class="game-over">
+                    <div style="font-size: 1.5em; margin-bottom: 20px;">GAME OVER</div>
+                    <div>${winnerText}</div>
+                    <div style="margin-top: 20px; font-size: 0.9em;">
+                        Final Score: You ${data.result.user_score} - ${data.result.bot_score} Bot
+                    </div>
+                    <button class="btn-success" onclick="location.reload()" style="margin-top: 20px;">
+                        Play Again
+                    </button>
+                </div>
+            `;
+        }
+
+        async function endGame() {
+            if (!currentSessionId) return;
+
+            if (!confirm('Are you sure you want to end the game?')) return;
+
+            try {
+                await fetch(`${API_URL}/game/${currentSessionId}`, {
+                    method: 'DELETE'
+                });
+
+                location.reload();
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

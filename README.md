@@ -102,16 +102,16 @@ Your move: quit
 
 ### File Descriptions
 
-| File | Purpose | Lines of Code | Assignment Relevance |
+| File | Purpose | Assignment Relevance |
 |------|---------|---------------|---------------------|
-| **prompts.py** | ⭐ System prompts, rules, edge cases | ~100 | **PRIMARY FOCUS** |
-| **judge.py** | LLM integration, intent understanding | ~80 | Architecture Layer 1 |
-| **game_logic.py** | Minimal game mechanics | ~150 | Architecture Layer 2 |
-| **response.py** | Output formatting | ~100 | Architecture Layer 3 |
-| **models.py** | Pydantic models for structured output | ~60 | State modeling |
-| **main.py** | CLI orchestrator | ~130 | Required interface |
-| **api.py** | REST API server | ~300 | Bonus feature |
-| **index.html** | Web UI | ~400 | Bonus feature |
+| **prompts.py** | ⭐ System prompts, rules, edge cases | **PRIMARY FOCUS** |
+| **judge.py** | LLM integration, intent understanding | Architecture Layer 1 |
+| **game_logic.py** | Minimal game mechanics | Architecture Layer 2 |
+| **response.py** | Output formatting | Architecture Layer 3 |
+| **models.py** | Pydantic models for structured output | State modeling |
+| **main.py** | CLI orchestrator | Required interface |
+| **api.py** | REST API server | Bonus feature |
+| **index.html** | Web UI | Bonus feature |
 
 ---
 
